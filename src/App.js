@@ -17,12 +17,6 @@ function App() {
   const [value, setValue] = useState("random person");
 
   const fetchData = async () => {
-    setLoading(true);
-
-    if (loading) {
-      return <h1> Loading...</h1>;
-    }
-
     const response = await fetch(url);
     const data = await response.json();
 
@@ -32,21 +26,21 @@ function App() {
     const { large: image } = person.picture;
     const { first, last } = person.name;
     //bellow is how I can get nested properties out of the object
-    
+
     const {
       login: { password },
     } = person;
-    
+
     const {
       dob: { age },
     } = person;
-    
+
     const {
       street: { number, name },
     } = person.location;
-    
+
     //create a new object in order to make it easier to read
-    
+
     const newPerson = {
       image: image,
       phone: phone,
@@ -56,9 +50,11 @@ function App() {
       street: `${number} ${name}`,
       name: `${first} ${last}`,
     };
-    
+
     setPerson(newPerson);
     setLoading(false);
+    setTitle("name");
+    setValue(newPerson.name);
   };
 
   useEffect(() => {
@@ -75,7 +71,7 @@ function App() {
       <div className="block">
         <div className="container">
           <img
-            src={(person && person.img) || defaultImage}
+            src={(person && person.image) || defaultImage}
             alt="random user"
             className="user-img"
           />
@@ -127,7 +123,7 @@ function App() {
             </button>
           </div>
 
-          <button className="btn" type="button">
+          <button className="btn" type="button" onClick={fetchData}>
             {loading ? "loading..." : "random user"}
           </button>
         </div>
