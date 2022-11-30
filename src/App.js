@@ -16,10 +16,6 @@ function App() {
   const [title, setTitle] = useState("name");
   const [value, setValue] = useState("random person");
 
-  const handleValue = (e) => {
-    console.log(e.target.value);
-  };
-
   const fetchData = async () => {
     setLoading(true);
 
@@ -29,14 +25,49 @@ function App() {
 
     const response = await fetch(url);
     const data = await response.json();
+
+    //destructure the properties from the object in the data
+    const person = data.results[0];
+    const { phone, email } = person;
+    const { large: image } = person.picture;
+    const { first, last } = person.name;
+    //bellow is how I can get nested properties out of the object
+    
+    const {
+      login: { password },
+    } = person;
+    
+    const {
+      dob: { age },
+    } = person;
+    
+    const {
+      street: { number, name },
+    } = person.location;
+    
+    //create a new object in order to make it easier to read
+    
+    const newPerson = {
+      image: image,
+      phone: phone,
+      email: email,
+      password: password,
+      age: age,
+      street: `${number} ${name}`,
+      name: `${first} ${last}`,
+    };
+    
+    setPerson(newPerson);
     setLoading(false);
-    setPerson(data);
   };
 
   useEffect(() => {
     fetchData();
   }, []);
 
+  const handleValue = (e) => {
+    console.log(e.target.value);
+  };
   return (
     <main>
       <div className="block bcg-black"></div>
